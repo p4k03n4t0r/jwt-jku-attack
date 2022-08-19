@@ -10,23 +10,23 @@ def is_authorized(user_request, role=None):
     token = user_request.headers.get("Authorization")
     if not token:
         return False
-
-    token_header = jpy.get_unverified_header(token)
-    if "jku" in token_header:
-        response = requests.get(token_header.get("jku")).json()
-        keyset = jwk.JWKSet.from_json(json.dumps(response))
-        public_key = keyset.get_key(kid="MyKey")
-        try:
+    try:
+        token_header = jpy.get_unverified_header(token)
+        if "jku" in token_header:
+            response = requests.get(token_header.get("jku")).json()
+            keyset = jwk.JWKSet.from_json(json.dumps(response))
+            public_key = keyset.get_key(kid="MyKey")
             decoded_token = jwt.JWT(key=public_key, jwt=token)
-        except jws.InvalidJWSSignature:
-            return False
-        if not role:
-            return True
+            if not role:
+                return True
 
-        json_decode = json.loads(decoded_token.claims)
-        return json_decode.get("role") == role
-    else:
-        return False
+            json_decode = json.loads(decoded_token.claims)
+            return json_decode.get("role") == role
+        else:
+            return False
+    except:
+        pass
+    return False
 
 @app.route("/greeting", methods=["GET"])
 def greeting():

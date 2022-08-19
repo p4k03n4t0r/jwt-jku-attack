@@ -1,3 +1,4 @@
 Flask
 jwcrypto
 PyJWT
+requests

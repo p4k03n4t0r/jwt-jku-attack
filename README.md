@@ -11,10 +11,12 @@ The user must supply a valid JWT token to be able to access the Greeting Service
 ```bash
 # start Auth Service
 cd auth_service
+pip3 install -r requirements.txt
 python3 app.py
 
 # start Greeting Service
 cd greeting_service
+pip3 install -r requirements.txt
 python3 app.py
 ```
 
